@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <h1>Add a new Product</h1>
+    <hr>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'products:product_list' %}">Cancel</a>
+        <input type="submit" value="Add">
+    </form>
+
+{% endblock %}

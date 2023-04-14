@@ -1,0 +1,7 @@
+src/db.sqlite3
+src/walkthisway/config.json
+src/products/migrations/*
+src/media/*
+
+!src/products/migrations/__init__.py
+!src/media/media.txt

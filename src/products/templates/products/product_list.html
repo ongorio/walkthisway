@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <h2>Products</h2>
+    <a href="{% url 'products:product_create' %}">Add Product</a>
+    <hr>
+
+    <div class="container">
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4">
+                <div class="card" style="width: 14rem;">
+                    <img src="{{ product.image.url }}" alt="{{ product.name}}" class="card-img-top" height="110">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href="{% url 'products:product_detail' slug=product.slug %}">{{ product.name }}</a></h5>
+                        <p class="card-text">
+                            {{ product.price }}$
+                        </p>
+                        <a href="{% url 'products:product_detail' slug=product.slug %}" class="btn btn-sm btn-secondary">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+                
+            {% empty %}
+            <h5>No Products Found!</h5>
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}
