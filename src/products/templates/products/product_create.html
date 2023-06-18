@@ -2,14 +2,309 @@
 
 {% block body %}
 
-    <h1>Add a new Product</h1>
+    <h1>Add a New Product</h1>
     <hr>
 
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" style="margin-left: 20%; margin-right: 20%;" class="shadow rounded p-3 border">
         {% csrf_token %}
-        {{ form.as_p }}
-        <a href="{% url 'products:product_list' %}">Cancel</a>
-        <input type="submit" value="Add">
-    </form>
+
+        <div id="step-1">
+            <label for="" class="form-label">{{ form.name.label}}</label>
+            <div>
+                <div id="name-errors"></div>
+                <div id="name-server-errors">
+                    {% for error in form.name.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {{ form.name }}
+            </div>
+        </div>
+
+        <div id="step-2" style="display: none;">
+            <label for="" class="form-label">{{ form.price.label }}</label>
+            <div>
+                <div id="price-errors"></div>
+                <div id="price-server-errors">
+                    {% for error in form.price.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {{ form.price }}
+            </div>
+            <label for="" class="form-label">{{ form.quantity.label }}</label>
+            <div>
+                <div id="quantity-errors"></div>
+                <div id="quantity-server-errors">
+                    {% for error in form.quantity.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {{ form.quantity }}
+            </div>
+        </div>
+
+        <div id="step-3" style="display: none;">
+            <label for="" class="form-label">{{ form.description.label }}</label>
+            <div>
+                <div id="desc-errors"></div>
+                <div id="desc-server-errors">
+                    {% for error in form.description.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {{ form.description }}
+            </div>
+        </div>
+
+        <div id="step-4" style="display: none;">
+            <label for="" class="form-label">{{ form.image.label }}</label>
+            <div>
+                <div id="image-server-errors">
+                    {% for error in form.image.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {{ form.image }}
+            </div>
+        </div>
+
+
+
+        <div class="d-flex mt-3">
+            <button class="me-auto btn btn-outline-primary" type="button" id="backBtn" style="display: none;">Back</button>
+            <a href="{% url 'products:product_list' %}" class="btn btn-outline-warning me-auto" id="cancelBtn">Cancel</a>
+            <button class="ms-auto btn btn-outline-primary" type="button" id="nextBtn">Next</button>
+            <input type="submit" class="btn btn-outline-primary ms-auto" value="Add" id="submitBtn" style="display: none;">
+        </div>
+
+
+    <script>
+        let step = 1;
+
+        let step1Div = document.getElementById('step-1');
+        let step2Div = document.getElementById('step-2');
+        let step3Div = document.getElementById('step-3');
+        let step4Div = document.getElementById('step-4');
+        
+        let nextBtn = document.getElementById('nextBtn');
+        let backBtn = document.getElementById('backBtn');
+        let cancelBtn = document.getElementById('cancelBtn');
+        let submitBtn = document.getElementById('submitBtn');
+
+        let nameInputId = '{{ form.name.auto_id }}'
+        let quantityInputId = '{{ form.quantity.auto_id }}';
+        let priceInputId = '{{ form.price.auto_id }}';
+        let descInputId = '{{ form.description.auto_id }}';
+        
+        let nameServerErrors = document.getElementById('name-server-errors');
+        let priceServerErrors = document.getElementById('price-server-errors');
+        let quantityServerErrors = document.getElementById('quantity-server-errors');
+        let descServerErrors = document.getElementById('desc-server-errors');
+        let imageServerErrors = document.getElementById('image-server-errors');
+
+
+        let makeStepVisible = (step) =>{
+            switch (step) {
+                case 1:
+                    step1Div.style.display = 'block';
+                    step2Div.style.display = 'none';
+                    step3Div.style.display = 'none';
+                    step4Div.style.display = 'none';
+
+                    cancelBtn.style.display = 'inline-block';
+                    backBtn.style.display = 'none'
+                    // makeStepVisible(step1Div, [step2Div, step3Div, step4Div]);
+                    break;
+                case 2:
+                    step1Div.style.display = 'none';
+                    step2Div.style.display = 'block';
+                    step3Div.style.display = 'none';
+                    step4Div.style.display = 'none';
+
+                    cancelBtn.style.display = 'none';
+                    backBtn.style.display = 'inline-block'
+                    break;
+                case 3:
+                    step1Div.style.display = 'none';
+                    step2Div.style.display = 'none';
+                    step3Div.style.display = 'block';
+                    step4Div.style.display = 'none';
+
+                    nextBtn.style.display = 'inline-block';
+                    submitBtn.style.display = 'none';
+                    break;
+                case 4:
+                    step1Div.style.display = 'none';
+                    step2Div.style.display = 'none';
+                    step3Div.style.display = 'none';
+                    step4Div.style.display = 'block';
+
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'inline-block'
+                    break;
+
+            }
+        };
+
+        let validateInputs = step =>{
+
+            let nameInput = document.getElementById(nameInputId);
+            let nameErrorDiv = document.getElementById('name-errors');
+            
+            let priceInput = document.getElementById(priceInputId)
+            let priceErrorDiv = document.getElementById('price-errors');
+
+            let quantityInput = document.getElementById(quantityInputId);
+            let quantityErrorDiv = document.getElementById('quantity-errors');
+
+            let descInput = document.getElementById(descInputId);
+            let descErrorDiv = document.getElementById('desc-errors');
+
+            switch (step) {
+                case 2:
+                    let name = String(nameInput.value)
+                    if (nameErrorDiv.lastChild !== null) nameErrorDiv.removeChild(nameErrorDiv.lastChild)
+
+                    if (name === '' || name.length > 255){
+                        let nameErrorMessageText = '';
+                        let nameErrorMessage = document.createElement('div');
+                        nameErrorMessage.classList.add('alert','alert-danger');
+
+                        if (name == '') nameErrorMessageText = 'Name Must not be Empty!'
+                        else if (name.length > 255) nameErrorMessageText = 'Name must be 255 characters or less'
+                            
+                        nameErrorMessage.innerText = nameErrorMessageText
+
+                        nameErrorDiv.appendChild(nameErrorMessage)
+                        nameInput.focus()
+                        return false
+                    }
+                    break;
+                
+                case 3:
+                    let quantity = (quantityInput.value !== '') ? Number(quantityInput.value): '';
+                    let price = (priceInput.value !== '') ? Number(priceInput.value) : '';
+
+                    if (priceErrorDiv.lastChild !== null) priceErrorDiv.removeChild(priceErrorDiv.lastChild);
+                    if (quantityErrorDiv.lastChild !== null) quantityErrorDiv.removeChild(quantityErrorDiv.lastChild);
+                    
+                    // if(price === '' || price < 0){
+                    if(price === ''){
+                        let priceErrorMessageText = '';
+                        let priceErrorMessage = document.createElement('div');
+                        priceErrorMessage.classList.add('alert','alert-danger');
+
+                        if (price === '') priceErrorMessageText = 'Price Must not be Empty!';
+                        // else if (price < 0) priceErrorMessageText = 'Price must be greater than 0!';
+
+                        priceErrorMessage.innerText = priceErrorMessageText;
+
+                        priceErrorDiv.appendChild(priceErrorMessage);
+                        priceInput.focus()
+                        return false
+                    }
+
+                    if (quantity === '' || quantity < 0){
+                        let quantityErrorMessageText = '';
+                        let quantityErrorMessage = document.createElement('div');
+                        quantityErrorMessage.classList.add('alert','alert-danger');
+
+                        if(quantity === '') quantityErrorMessageText = 'Quantity Must not be empty';
+                        else if(quantity < 0) quantityErrorMessageText = 'Quantity must be greater than 0!';
+
+                        quantityErrorMessage.innerText = quantityErrorMessageText;
+                    
+                        quantityErrorDiv.appendChild(quantityErrorMessage)
+                        quantityInput.focus();
+                        return false
+                    }
+                    break;
+                case 4:
+                    let description = String(descInput.value);
+
+                    if (descErrorDiv.lastChild !== null) descErrorDiv.removeChild(descErrorDiv.lastChild);
+
+                    if (description === ''){
+                        let descErrorMessageText = '';
+                        let descErrorMessage = document.createElement('div');
+                        descErrorMessage.classList.add('alert','alert-danger');
+
+                        if (description === '') descErrorMessageText = 'Description Must not be Empty!';
+
+                        descErrorMessage.innerText = descErrorMessageText;
+
+                        descErrorDiv.appendChild(descErrorMessage)
+                        descInput.focus();
+                        return false;
+                    }
+                    break;
+            }
+
+            return true;
+        }
+
+        // Check for server errors
+        function checkServerErrors(){
+            if (nameServerErrors.innerText.trim() !== ''){
+                step = 1;
+                makeStepVisible(1)
+                return;
+            }
+
+            if (priceServerErrors.innerText.trim() !== '' || quantityServerErrors.innerText.trim() !== ''){
+                step = 2;
+                makeStepVisible(2);
+                return;
+            }
+
+            if (descServerErrors.innerText.trim() !== ''){
+                step = 3;
+                makeStepVisible(3);
+                return
+            }
+
+            if (imageServerErrors.innerText.trim() !== ''){
+                step = 4;
+                makeStepVisible(4)
+                return
+            }
+
+            step = 1;
+            makeStepVisible(1)
+        }
+
+        checkServerErrors()
+
+        nextBtn.addEventListener('click', event=>{
+            step = (step < 4) ? step + 1 : 4;
+
+            let isValid = validateInputs(step);
+
+            if (!isValid){
+                step = step - 1;
+                return
+            }
+            makeStepVisible(step)
+        })
+
+        backBtn.addEventListener('click', event=>{
+            step = (step > 1) ? step - 1: 1;
+            makeStepVisible(step)
+        })
+
+
+    </script>
 
 {% endblock %}

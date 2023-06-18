@@ -41,4 +41,10 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse('products:product_detail', kwargs={'slug': self.slug})
     
+    def __str__(self) -> str:
+        return f'{self.name}'
+    
+    def __repr__(self) -> str:
+        return f'<Product> {self.__str__}'
+    
 
