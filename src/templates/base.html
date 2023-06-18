@@ -17,14 +17,15 @@
 </head>
 <body>
     
-    <header>
+    <header class="mb-5">
         {% include 'navbar.html' %}
     </header>
 
 
     <main>
-        {% block body %}{% endblock %}
-
+        <div class="container">
+            {% block body %}{% endblock %}
+        </div>
     </main>
 
 

@@ -2,23 +2,26 @@
 
 {% block body %}
 
-    <h2>Products</h2>
-    <a href="{% url 'products:product_create' %}">Add Product</a>
-    <hr>
+        <h2>Products</h2>
+        <a href="{% url 'products:product_create' %}">Add Product</a>
+        <hr>
 
-    <div class="container">
 
         <div class="row">
             {% for product in products %}
             <div class="col-md-4">
                 <div class="card" style="width: 14rem;">
-                    <img src="{{ product.image.url }}" alt="{{ product.name}}" class="card-img-top" height="110">
+                    <div class="p-2">
+                        <a href="{% url 'products:product_detail' slug=product.slug %}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name}}" class="card-img-top" height="110">
+                        </a>
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title"><a href="{% url 'products:product_detail' slug=product.slug %}">{{ product.name }}</a></h5>
                         <p class="card-text">
                             {{ product.price }}$
                         </p>
-                        <a href="{% url 'products:product_detail' slug=product.slug %}" class="btn btn-sm btn-secondary">Buy Now</a>
+                        <a href="{% url 'products:product_detail' slug=product.slug %}" class="btn btn-sm btn-primary">Buy Now</a>
                     </div>
                 </div>
             </div>
@@ -27,7 +30,7 @@
             <h5>No Products Found!</h5>
             {% endfor %}
         </div>
-    </div>
+
 
 
 {% endblock %}

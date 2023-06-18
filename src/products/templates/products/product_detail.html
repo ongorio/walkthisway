@@ -2,40 +2,41 @@
 
 {% block body %}
 
-    <div class="container">
 
         <h1>{{ product.name }}</h1>
         
-        <div class="row g-0 shadow">
-            <div class="col-md-3">
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" height="200" style="width: 100%;" class="rounded">
-
+        <div class="row mt-3">
+            <div class="col-md-5">
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" height="200" style="width: 75%;" class="rounded">
             </div>
 
-            <div class="col-md-9 p-3 bg-light rounded">
-                <h5>Details</h5>
-                <p>
-                    {{ product.description }}
-                </p>
-            </div>
+            <div class="col-md-7">
+                <div class="shadow rounded p-2 mb-3 bg-body-secondary">
+                    <h5>Details</h5>
+                    <p>
+                        {{ product.description }}
+                    </p>
+                </div>
 
+                <table class="table mb-3">
+                    <tr>
+                        <td>Name:</td>
+                        <td>{{ product.name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Price:</td>
+                        <td>{{ product.price }}</td>
+                    </tr>
+                    <tr>
+                        <td>Available:</td>
+                        <td>{{ product.quantity }}</td>
+                    </tr>
+                </table>
+
+                <button class="btn btn-lg btn-primary" style="width: 100%;">Add To Cart</button>
+            </div>
         </div>
-        
-       
-        
-        <table>
-            <tr>
-                <td>Name:</td>
-                <td>{{ product.name }}</td>
-            </tr>
-            <tr>
-                <td>Price:</td>
-                <td>{{ product.price }}</td>
-            </tr>
-            <tr>
-                <td>Available:</td>
-                <td>{{ product.quantity }}</td>
-            </tr>
-        </table>
-    </div>
+
+
+
 {% endblock %}
