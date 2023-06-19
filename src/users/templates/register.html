@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="border rounded shadow p-3" style="margin-right: 25%; margin-left: 25%;">
+        <h2>Register</h2>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+
+            <div>
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                
+                {% for error in form.email.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                {% for error in form.first_name.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                {% for error in form.last_name.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                {% for error in form.password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+                {% for error in form.v_password.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <label for="" class="form-label">{{ form.email.label }}</label>
+            <div>
+                {{ form.email }}
+            </div>
+
+            <label for="" class="form-label">{{ form.first_name.label }}</label>
+            <div>
+                {{ form.first_name }}
+            </div>
+
+            <label for="" class="form-label">{{ form.last_name.label }}</label>
+            <div>
+                {{ form.last_name }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    
+                    <label for="" class="form-label">{{ form.password.label }}</label>
+                    <div>
+                        {{ form.password }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="" class="form-label">{{ form.v_password.label }}</label>
+                    <div>
+                        
+                        {{ form.v_password }}
+                    </div>
+                </div>
+            </div>
+
+            <small>Already have an Account? <a href="{% url 'users:login' %}">Log In</a></small>
+
+            <div class="d-flex">
+                <a href="{% url 'index' %}" class="ms-auto btn btn-outline-warning">Cancel</a>
+                <button type="submit" class="ms-1 btn btn-primary">Register</button>
+            </div>
+
+        </form>
+    </div>
+
+{% endblock %}

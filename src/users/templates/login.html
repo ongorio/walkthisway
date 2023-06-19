@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div class="border rounded shadow p-3" style="margin-left: 25%; margin-right: 25%;">
+        <h2>Log In</h2>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+
+            {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+            {% endif %}
+
+
+            <label for="" class="form-label"">Email</label>
+            <div>
+                <input type="email" name="email" id="email" class="form-control" required>
+            </div>
+
+            <label for="" class="form-label">Password</label>
+            <div>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+
+            <small>Don't have an Account? Register <a href="{% url 'users:register' %}">Here</a></small>
+            <div class="d-flex">
+                <a href="{% url 'index' %}" class="ms-auto btn btn-outline-warning">Cancel</a>
+                <button type="submit" class="ms-1 btn btn-primary">Log In</button>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

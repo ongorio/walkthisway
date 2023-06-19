@@ -1,7 +1,13 @@
 src/db.sqlite3
 src/walkthisway/config.json
 src/products/migrations/*
+src/users/migrations/*
+src/orders/migrations/*
+src/customers/migrations/*
 src/media/*
 
 !src/products/migrations/__init__.py
+!src/users/migrations/__init__.py
+!src/orders/migrations/__init__.py
+!src/customers/migrations/__init__.py
 !src/media/media.txt
