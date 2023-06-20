@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+    <div>
+    <!-- <div style="margin-left: 25%; margin-right: 25%;"> -->
+        <h2>Cart</h2>
+        <hr>
+
+        <table class="table table-hover">
+            <thead class="text-center">
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>Total Price</th>
+                    <th>Quantity</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="text-center align-middle">
+                {% for item in cart.items.all %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'products:product_detail' slug=item.product.slug %}" style="text-decoration: none;">
+                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" height="100" width="150">
+                                {{ item.product.name }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ item.product.price }}
+                        </td>
+                        <td>
+                            {{ item.get_total }}
+                        </td>
+                        <td>
+                            {{ item.quantity }}
+                        </td>
+                        <td>
+                            <button>-</button>
+                            <button>+</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div>
+            Items: {{ cart.get_total_items }} <br>
+            Total: {{ cart.get_total }}
+        </div>
+    </div>
+
+{% endblock %}

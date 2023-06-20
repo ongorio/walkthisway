@@ -5,7 +5,7 @@ class Customer(models.Model):
     first_name = models.CharField('First Name', max_length=255)
     last_name = models.CharField('Last Name', max_length=255)
     email = models.EmailField('Email', unique=True)
-    user = models.ForeignKey('auth.User', models.SET_NULL, related_name='customer', null=True, blank=True)
+    user = models.OneToOneField('auth.User',models.SET_NULL, related_name='customer', null=True, blank=True)
     date_registered = models.DateField()
 
     def __str__(self) -> str:
