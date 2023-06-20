@@ -33,21 +33,55 @@
                             {{ item.get_total }}
                         </td>
                         <td>
-                            {{ item.quantity }}
+                            <div>
+                                <button class="update-cart btn btn-sm btn-outline-primary" data-action="add" data-product="{{ item.product.pk }}"><i class="fa-solid fa-caret-up"></i></button>
+                            </div>
+                            <div class="fs-4">
+                                {{ item.quantity }}
+                            </div>
+                            <div>
+                                <button class="update-cart btn btn-sm btn-outline-primary" data-action="remove" data-product="{{ item.product.pk }}"><i class="fa-solid fa-caret-down"></i></button>
+                            </div>
                         </td>
                         <td>
-                            <button>-</button>
-                            <button>+</button>
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <div>
-            Items: {{ cart.get_total_items }} <br>
-            Total: {{ cart.get_total }}
+        <div class="d-flex align-items-center">
+            <div>
+                Items: {{ cart.get_total_items }} <br>
+                Total: {{ cart.get_total }}
+            </div>
+            <a class="btn btn-primary ms-auto" href="">Go to Checkout</a>
         </div>
     </div>
 
+    <script>
+        let updateBtns = document.getElementsByClassName('update-cart');
+
+       for (let i = 0; i < updateBtns.length; i++){
+        updateBtns[i].addEventListener('click', function(){
+            let productId = this.dataset.product;
+            let action = this.dataset.action;
+
+            fetch("{% url 'orders:update_orderitem' %}",{
+                headers:{
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({productId, action}),
+                method: 'POST'
+            }).then(response=>{
+                return response.json()
+            }).then(data=>{
+                console.log(data)   
+                location.reload()
+            })
+        });
+       }
+
+    </script>
 {% endblock %}

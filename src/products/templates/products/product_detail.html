@@ -42,14 +42,15 @@
             let addBtn = document.getElementById('addBtn');
 
             let addFunction = (event) =>{
-                fetch("{% url 'orders:add_product' %}",{
+                fetch("{% url 'orders:update_orderitem' %}",{
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': '{{ csrf_token }}'
                     },
                     method: 'POST',
                     body: JSON.stringify({
-                        'productId': '{{ product.id }}'
+                        'productId': '{{ product.id }}',
+                        'action': 'add'
                     })
                 }).then(response=>{
                     return response.json()

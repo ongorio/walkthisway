@@ -24,13 +24,42 @@ class AddProductView(generic.View):
             return JsonResponse('Item Added', safe=False)
 
         return JsonResponse('Item Failed to add!', safe=False)
-        
+
+
+class UpdateOrderItemView(generic.View):
+    def post(self, request, *args, **kwargs):
+
+        data = json.loads(request.body)
+
+        action = data['action']
+        customer = request.user.customer
+        product = Product.objects.get(pk=data['productId'])
+
+        order, created = Order.objects.get_or_create(customer=customer,closed=False)
+        orderitem, created = OrderItem.objects.get_or_create(order=order, product=product)
+
+
+        if action == 'add':
+            if product.quantity >= 1 and product.quantity >= orderitem.quantity + 1:
+                print('adding')
+                orderitem.quantity += 1
+
+        elif action == 'remove':
+            if orderitem.quantity > 0:
+                orderitem.quantity -= 1
+
+        orderitem.save()
+
+        if orderitem.quantity == 0:
+            orderitem.delete()
+
+        return JsonResponse('Item Updated!', safe=False)
 
 class CartView(generic.View):
     template_name = 'cart.html'
     def get(self, request, *args, **kwargs):
         customer = request.user.customer
-        order = Order.objects.filter(customer=customer, closed=False).first()
-        # print()
+        order, _ = Order.objects.get_or_create(customer=customer, closed=False)
+
 
         return render(request, self.template_name, {'cart': order})
