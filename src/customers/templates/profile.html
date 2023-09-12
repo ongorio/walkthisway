@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+
+{% block body %}
+    
+<div class="bg-light rounded shadow p-3 mb-3">
+        <h1>Hi, {{ user.customer.get_full_name }}</h1>
+        <hr>
+        
+        <div class="text-center">
+            <h4>My Info</h4>
+            <strong>Name: </strong> {{ user.customer.get_full_name }}<br>
+            <strong>Email: </strong> {{ user.customer.email }} <br>
+            <a href="{% url 'customers:profile_update' %}" class="btn btn-sm btn-primary">Edit</a>
+            <a href="{% url 'customers:profile_password_update' %}" class="btn btn-sm btn-primary">Change Password</a>
+        </div>
+    </div>
+
+    <h2>Orders</h2>
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th>Date Ordered</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.date_ordered }}</td>
+                    <td><a href="{% url 'orders:order_detail' pk=order.pk %}">View</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

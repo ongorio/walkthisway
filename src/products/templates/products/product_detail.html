@@ -42,25 +42,87 @@
             let addBtn = document.getElementById('addBtn');
 
             let addFunction = (event) =>{
-                fetch("{% url 'orders:update_orderitem' %}",{
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': '{{ csrf_token }}'
-                    },
-                    method: 'POST',
-                    body: JSON.stringify({
-                        'productId': '{{ product.id }}',
-                        'action': 'add'
-                    })
-                }).then(response=>{
-                    return response.json()
-                }).then(data=>{
-                    console.log('data',data)
-                    location.reload()
-                })
+
+                const item = {
+                    pk: '{{ product.id }}',
+                    price: '{{ product.price }}',
+                    slug: '{{ product.slug }}',
+                    name: '{{ product.name }}',
+                    imageURL: '{{ product.imageURL }}'
+                }
+
+                if (user == 'AnonymousUser'){
+                    addCookieItem(item, 'add');
+                }else{
+                    updateUserOrder(item, 'add')
+                }
+
+                // fetch("{% url 'orders:update_orderitem' %}",{
+                //     headers: {
+                //         'Content-Type': 'application/json',
+                //         'X-CSRFToken': '{{ csrf_token }}'
+                //     },
+                //     method: 'POST',
+                //     body: JSON.stringify({
+                //         'productId': '{{ product.id }}',
+                //         'action': 'add'
+                //     })
+                // }).then(response=>{
+                //     return response.json()
+                // }).then(data=>{
+                //     console.log('data',data)
+                //     location.reload()
+                // })
             }
 
             addBtn.addEventListener('click', addFunction)
+
+
+            // Add to Cookie Cart
+            function addCookieItem(product, action){
+                
+                if(action == 'add'){
+                    if(!cart[product.pk]){
+                        cart[product.pk] = {'quantity': 1};
+                    }else{
+                        cart[product.pk]['quantity'] += 1;
+                    }
+                    cart[product.pk]['product'] = product
+                }
+                
+                if(action == 'remove'){
+                    cart[product.pk]['quantity'] -= 1;
+
+                    if(cart[product.pk]['quantity'] <= 0){
+                        delete cart[product.pk];
+                    }
+                }
+
+                document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+                location.reload();
+            }
+
+            // Update Log In User
+            function updateUserOrder(product, action){
+                let url = "{% url 'orders:update_orderitem' %}";
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}',
+                    },
+                    body: JSON.stringify({
+                        'productId': product.pk,
+                        'action': action
+                    }),
+                }).then(response=>{
+                    return response.json()
+                }).then(data=>{
+                    location.reload()
+                });
+            }
+
 
 
         </script>

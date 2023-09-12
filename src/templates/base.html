@@ -14,6 +14,34 @@
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/bd43079ab2.js" crossorigin="anonymous"></script>
+
+    <script>
+        user = '{{ request.user }}'
+
+        function getCookie(name){
+            // Split cookie string and get all individual name=value pairs
+            var cookies = document.cookie.split(';');
+
+            // Loop through array
+            for(let i = 0; i < cookies.length; i++){
+                let cookiePair = cookies[i].split('=');
+
+                // Remove whitespace at the beginning of the name
+                // and compare it with given string
+                if (name == cookiePair[0].trim()){
+                    // Decode the cookie value and return
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+        let cart = JSON.parse(getCookie('cart'));
+        if(!cart){
+            cart = {};
+            document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+        }
+    </script>
 </head>
 <body>
     

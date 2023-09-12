@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary shadow">
-    <div class="container-fluid">
+    <div class="container">
       <a class="navbar-brand" href="{% url 'index' %}">Walk This Way</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -9,7 +9,7 @@
           <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
           <a class="nav-link" href="{% url 'products:product_list' %}">Products</a>
           <a class="nav-link" href="{% url 'orders:cart' %}">Cart</a>
-          <a class="nav-link disabled">Profile</a>
+          <a class="nav-link" href="{% url 'customers:profile' %}">Profile</a>
         </div>
 
         <div class="navbar-nav ms-auto">

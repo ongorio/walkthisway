@@ -14,9 +14,7 @@ class Customer(models.Model):
 
     def __repr__(self) -> str:
         return f'<Customer> {self.__str__}'
-
-    # zip_code = models.CharField('Zip Code', max_length=20)
-    # city = models.CharField('City', max_length=255)
-    # state = models.CharField('State', max_length=255)
-    # address_line1 = models.CharField('Address Line 1', max_length=500)
-    # address_line2 = models.CharField('Address Line 2', max_length=500)
+    
+    @property
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'

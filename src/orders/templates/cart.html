@@ -18,11 +18,11 @@
                 </tr>
             </thead>
             <tbody class="text-center align-middle">
-                {% for item in cart.items.all %}
+                {% for item in items %}
                     <tr>
                         <td>
                             <a href="{% url 'products:product_detail' slug=item.product.slug %}" style="text-decoration: none;">
-                                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" height="100" width="150">
+                                <img src="{{ item.product.imageURL }}" alt="{{ item.product.name }}" height="100" width="150">
                                 {{ item.product.name }}
                             </a>
                         </td>
@@ -52,10 +52,10 @@
 
         <div class="d-flex align-items-center">
             <div>
-                Items: {{ cart.get_total_items }} <br>
-                Total: {{ cart.get_total }}
+                Items: {{ cart_items }} <br>
+                Total: {{ order.get_total }}
             </div>
-            <a class="btn btn-primary ms-auto" href="">Go to Checkout</a>
+            <a class="btn btn-primary ms-auto" href="{% url 'orders:checkout' %}">Go to Checkout</a>
         </div>
     </div>
 
@@ -66,22 +66,80 @@
         updateBtns[i].addEventListener('click', function(){
             let productId = this.dataset.product;
             let action = this.dataset.action;
+            // console.log(productId)
+            item = {
+                pk: productId
+            }
 
-            fetch("{% url 'orders:update_orderitem' %}",{
-                headers:{
+            if (user == 'AnonymousUser'){
+                // console.log(productId)
+                addCookieItem(item, action)
+            }else{
+                updateUserOrder(item, action)
+
+            }
+
+
+            // fetch("{% url 'orders:update_orderitem' %}",{
+            //     headers:{
+            //         'Content-Type': 'application/json',
+            //         'X-CSRFToken': '{{ csrf_token }}'
+            //     },
+            //     body: JSON.stringify({productId, action}),
+            //     method: 'POST'
+            // }).then(response=>{
+            //     return response.json()
+            // }).then(data=>{
+            //     console.log(data)   
+            //     location.reload()
+            // })
+        });
+       }
+
+       // Add to Cookie Cart
+       function addCookieItem(product, action){
+            console.log(product)
+            if(action == 'add'){
+                if(!cart[product.pk]){
+                    cart[product.pk] = {'quantity': 1};
+                }else{
+                    cart[product.pk]['quantity'] += 1;
+                }
+            }
+            
+            if(action == 'remove'){
+                cart[product.pk]['quantity'] -= 1;
+
+                if(cart[product.pk]['quantity'] <= 0){
+                    delete cart[product.pk];
+                }
+            }
+
+            document.cookie = 'cart=' + JSON.stringify(cart) + ';domain=;path=/';
+            location.reload();
+        }
+
+
+        // Update Log In User
+        function updateUserOrder(product, action){
+            let url = "{% url 'orders:update_orderitem' %}";
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': '{{ csrf_token }}'
+                    'X-CSRFToken': '{{ csrf_token }}',
                 },
-                body: JSON.stringify({productId, action}),
-                method: 'POST'
+                body: JSON.stringify({
+                    'productId': product.pk,
+                    'action': action
+                }),
             }).then(response=>{
                 return response.json()
             }).then(data=>{
-                console.log(data)   
                 location.reload()
-            })
-        });
-       }
+            });
+        }
 
     </script>
 {% endblock %}
